@@ -1,13 +1,15 @@
-class Game{
+class Game extends State{
     constructor() {
-        this.current_time = 0;
-        this.done = false;
-        this.status = undefined;
+        // this.current_time = 0;
+        // this.done = false;
+        // this.status = undefined;
+        super();
     }
     
-    startup(current_time, level_data) {
+    startup(current_time, game_info) {
         this.start_time = current_time;
-        this.level_data = level_data
+        this.game_info = game_info;
+        this.level_data = getLevelData(this.game_info[LEVEL_NUM]);
         this.loadMap();
         this.setupGroup();
         this.state = IDLE;
@@ -29,7 +31,7 @@ class Game{
     }
     
     update(ctx, current_time, mouse_pos, mouse_down) {
-        this.current_time = Date.now();
+        this.current_time = current_time;
         
         if(this.state == IDLE) {
             let result = this.getActiveEntity();
@@ -129,10 +131,10 @@ class Game{
         if(this.group1.isEmpty() || this.group2.isEmpty()) {
             this.done = true;
             if(this.group1.isEmpty()) {
-                this.status = "Win";
+                this.next = LEVEL_WIN;
             }
             else {
-                this.status = "Lose";
+                this.next = LEVEL_LOSE;
             }
         }
     }
